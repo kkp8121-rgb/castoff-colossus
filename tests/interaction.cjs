@@ -1,7 +1,5 @@
 const assert = require('node:assert/strict');
-const path = require('node:path');
-const { pathToFileURL } = require('node:url');
-const { setup, save, artifacts } = require('./browser-tools.cjs');
+const { setup, save } = require('./browser-tools.cjs');
 const { ready, begin, snapshot, frames } = require('./play-helpers.cjs');
 
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms));

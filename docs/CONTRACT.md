@@ -49,6 +49,7 @@ Use substeps <=1/120 s for collisions if needed; accept dt up to .05 s. No frame
 3. `crown` / **가장 가벼운 거인**, length92. Ground [0,22],[25,56],[59,92]. Raised platforms x16 width4 y2.7; x47 width4 y3; x63 width3 y1.4; x67 width4 y3. Relays(18,3.6),(49,3.9),(69,3.9). Drone(12,2.5), turret36, walker47, drone(62,2.5), turret74. Checkpoint(75,0). Crown boss(83,0), hp30.
 
 Enemy patrol intervals must avoid walking over pits or through relay platforms. Keep ordinary enemies readable with telegraphs/cooldowns, not unavoidable contact damage every frame. Boss arena begins within 15 m of boss; bosses remain dormant earlier so long-range unseen projectiles do not cross the level.
+Boss phase strings exactly `dormant/telegraph/attack/recovery/dead`; only recovery is vulnerable.
 Ram: telegraph ~1.1 s, low horizontal shock wave (jump), then vulnerable recovery ~1.7 s.
 Spindle: alternate low wave and a high beam at feet+2.1 (stay low); recovery ~1.5 s. Beam must have a clear warning and finite active duration, not a permanent wall.
 Crown: two spaced low waves followed next cycle by a high beam; recovery ~1.3 s. Shield closed outside recovery; closed hits give explicit feedback and drop the plate. Punch/shot damages during recovery. Gentle extends tells. All boss attacks must be dodgeable through movement/jump/dash; never spawn a bolt inside the player.
