@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0b1720">
+  <title>CASTOFF COLOSSUS · 벗어던진 거인</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app-shell" data-screen="title">
+    <div id="error-banner" class="error-banner" hidden role="alert"></div>
+    <section id="title-screen" class="screen title-screen" aria-hidden="false">
+      <div class="title-art" aria-hidden="true"></div>
+      <div class="title-copy">
+        <p class="eyebrow">A 2.5D MECH ACTION PLATFORMER</p>
+        <h1>CASTOFF<br><strong>COLOSSUS</strong></h1>
+        <p class="title-hook">갑옷을 벗어 높이 닿고, 되찾아 다시 버티십시오.</p>
+        <p class="title-description">레아와 함께 고립된 대피 네트워크를 다시 켜고 살아남은 사람들을 구하십시오.</p>
+        <button class="primary-button large" data-action="start">출격 준비</button>
+        <button class="text-button" data-action="continue" id="continue-button">기록 이어하기</button>
+        <button class="text-button" data-action="guide">조작과 규칙</button>
+      </div>
+      <p class="title-credit">RHEA / 31 · SIGNAL PILOT</p>
+    </section>
+
+    <section id="select-screen" class="screen select-screen" aria-hidden="true" hidden>
+      <div class="menu-panel">
+        <p class="eyebrow">MISSION SELECT</p><h2>어디부터 되찾을까요?</h2>
+        <div id="level-list" class="level-list"></div>
+        <label class="setting-row" for="mode-select"><span>난이도</span><select id="mode-select"><option value="standard">표준 · 코어 3</option><option value="gentle">완화 · 코어 5</option></select></label>
+        <label class="setting-row" for="volume-range"><span>볼륨</span><input id="volume-range" type="range" min="0" max="1" step="0.01" value="0.24"></label>
+        <div class="button-row"><button class="primary-button" data-action="begin">출격</button><button class="secondary-button" data-action="back">뒤로</button><button class="icon-button" data-action="mute" id="mute-button">음소거</button></div>
+      </div>
+    </section>
+
+    <section id="play-screen" class="screen play-screen" aria-hidden="true" hidden>
+      <div id="world" class="world-host"><canvas id="world-canvas"></canvas></div>
+      <header class="hud top-hud"><div><strong id="level-title">MISSION</strong><span id="level-subtitle"></span></div><button class="hud-button" data-action="pause" aria-label="일시정지">Ⅱ</button></header>
+      <div class="hud objective-hud"><span id="relay-objective">릴레이 0 / 0</span><span id="objective-distance"></span><span id="boss-tell"></span></div>
+      <div class="hud armor-hud"><span>PLATES <b id="armor-count">6</b></span><span id="plate-icons" class="plate-icons" aria-label="장갑판"></span><span>CORE <b id="core-hp">3 / 3</b></span><span class="meter"><i id="recall-meter"></i></span></div>
+      <p id="context-tip" class="context-tip"></p><p id="feedback" class="feedback" aria-live="polite"></p>
+      <div class="touch-controls" aria-label="터치 조작">
+        <div class="touch-cluster"><button data-input="left" aria-label="왼쪽">◀</button><button data-input="right" aria-label="오른쪽">▶</button><button data-input="jump" aria-label="점프">점프</button></div>
+        <div class="touch-cluster"><button data-input="dash" aria-label="대시">대시</button><button data-input="punch" aria-label="펀치">펀치</button><button data-input="fire" aria-label="장갑 발사">발사</button><button data-input="recall" aria-label="장갑 회수">회수</button></div>
+      </div>
+    </section>
+
+    <section id="pause-screen" class="screen modal-screen" aria-hidden="true" hidden><div class="menu-panel compact"><p class="eyebrow">PAUSED</p><h2>잠시 멈췄습니다</h2><p>전투와 시간은 정지되어 있습니다.</p><div class="button-stack"><button class="primary-button" data-action="resume">계속하기</button><button class="secondary-button" data-action="guide">조작 보기</button><button class="secondary-button" data-action="back">임무 선택</button></div></div></section>
+    <section id="guide-screen" class="screen modal-screen" aria-hidden="true" hidden><div class="menu-panel guide-panel"><p class="eyebrow">FIELD MANUAL</p><h2>갑옷은 탄약이자 무게입니다</h2><div class="guide-grid"><p><b>A / D · ← / →</b><br>이동합니다.</p><p><b>Space</b><br>점프합니다. 방향키와 함께 틈을 넘으십시오.</p><p><b>Shift</b><br>짧은 대시와 무적 시간을 얻습니다.</p><p><b>J / K</b><br>펀치 / 장착 장갑판 발사.</p><p><b>R (지상에서 홀드)</b><br>흩어진 장갑판을 회수합니다. 회수 중에는 취약합니다.</p><p><b>Esc · M</b><br>일시정지 / 음소거.</p></div><p class="guide-note">처음 릴레이는 장갑판을 세 장 이상 발사하면 더 높은 점프가 가능합니다. 릴레이와 보스를 모두 처리한 뒤 출구로 이동하십시오.</p><button class="primary-button" data-action="back">돌아가기</button></div></section>
+
+    <section id="cleared-screen" class="screen modal-screen" aria-hidden="true" hidden><div class="menu-panel compact"><p class="eyebrow">MISSION CLEAR</p><h2 id="cleared-title">릴레이가 응답했습니다</h2><p id="cleared-copy"></p><div class="result-stats" id="cleared-stats"></div><button class="primary-button" data-action="next">다음 임무</button><button class="secondary-button" data-action="back">임무 선택</button></div></section>
+    <section id="lost-screen" class="screen modal-screen" aria-hidden="true" hidden><div class="menu-panel compact"><p class="eyebrow">SIGNAL LOST</p><h2>코어가 꺼졌습니다</h2><p id="lost-copy">현재 임무를 처음부터 다시 시작합니다.</p><button class="primary-button" data-action="retry">재시도</button><button class="secondary-button" data-action="back">임무 선택</button></div></section>
+    <section id="ending-screen" class="screen modal-screen ending-screen" aria-hidden="true" hidden><div class="menu-panel"><p class="eyebrow">NETWORK RESTORED</p><h2>무게를 되찾은 거인</h2><p>레아는 마지막 릴레이를 연결했습니다. 먼 곳의 대피선이 다시 켜지고, 누군가의 귀환 신호가 어둠을 가릅니다.</p><div class="ending-stats" id="ending-stats"></div><button class="primary-button" data-action="begin">처음부터 다시</button><button class="secondary-button" data-action="back">타이틀로</button></div></section>
+  </main>
+  <script src="game.js"></script>
+</body>
+</html>
