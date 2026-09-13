@@ -42,6 +42,12 @@ Software rendering disables shadows and caps pixels. Hardware shadows follow the
 
 `dist/castoff-colossus-web.zip`: 447,155 bytes, seven entries. Every extracted entry's SHA-256 matches its source, including the 636,244-byte JavaScript bundle. PNG source art and development dependencies are excluded from the web ZIP. The authored-file whitespace check passes; bundled upstream Three.js shader whitespace is excluded from that check.
 
-All sibling repositories `C:/Projects/1` through `15` remained clean. GitHub identity was freshly verified as `kkp8121-rgb` (ID 266132887), and `kkp8121-rgb/castoff-colossus` is public. The remote is empty: push and Pages activation await this release's explicit approval. Therefore no live Pages verification is claimed yet.
+All sibling repositories `C:/Projects/1` through `15` remained clean. Play at https://kkp8121-rgb.github.io/castoff-colossus/. Publication evidence for each revision is generated separately in ignored `artifacts/improvement-publication.json` after checking the deployed commit and asset hashes.
 
-After approval, push the reviewed main once, activate Pages from main/root, wait for a successful build, and rerun browser loading/audio checks with `CASTOFF_URL` set to the actual Pages URL.
+For deployment verification, use Pages from main/root, wait for a successful build, and rerun browser loading/audio checks with `CASTOFF_URL` set to the actual Pages URL.
+
+## Relay guidance regression — 2026-09-13
+
+The contextual relay message now computes the vertical requirement only while grounded, using the engine's 1/120-second semi-implicit gravity step and the actual punch window. A grounded probe reported the current armor and required armor threshold; an airborne probe switched to the short J relay instruction, with no live-state mutation. Measured isolated `step()` apexes were 1.769 m at five attached plates and 2.037 m at four attached plates. Evidence: `artifacts/qa-castoff-probe.json` and `artifacts/qa-after-grounded-air-tip.png`.
+
+`artifacts/visual-390-844-play.png` is a historical baseline, not a fresh before capture. The interaction suite still passed all 11 scenarios after rebuilding the bundle.

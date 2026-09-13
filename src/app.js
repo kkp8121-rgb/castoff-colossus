@@ -41,6 +41,22 @@ import { createAudio } from './audio.js';
   function level() { return getLevel(selectedLevel) || LEVELS.find(item => item.id === selectedLevel) || LEVELS[0]; }
   function inputClear() { heldKeys.clear(); heldPointers.clear(); pressed.clear(); document.querySelectorAll('[data-input].held').forEach(button => button.classList.remove('held')); }
   function setMessage(text, seconds = 3) { lastMessage = text || ''; messageUntil = performance.now() + seconds * 1000; renderHud(); }
+  function relayJumpRequirement(relay, player) {
+    if (!relay || !player || !player.grounded || !Number.isFinite(relay.y) || !Number.isFinite(player.y)) return null;
+    const fixed = 1 / 120, punchVerticalWindow = 0.3, rise = Math.max(0, relay.y - 0.9 - punchVerticalWindow - player.y);
+    for (let attached = 6; attached >= 0; attached--) {
+      const jump = RULES.baseJump + RULES.jumpPerPlate * (6 - attached);
+      let y = 0, velocity = jump, apex = 0;
+      for (let tick = 0; tick < 240; tick++) {
+        velocity -= RULES.gravity * fixed;
+        y += velocity * fixed;
+        apex = Math.max(apex, y);
+        if (y <= 0 && velocity < 0) break;
+      }
+      if (apex >= rise) return attached;
+    }
+    return null;
+  }
   function sound(event) { try { audio?.play?.(event); } catch (error) { console.error(error); } }
   function show(next) {
     if (!screenIds.includes(next)) return;
@@ -72,8 +88,11 @@ import { createAudio } from './audio.js';
     const meter = document.getElementById('recall-meter'); meter.style.width = `${Math.round(Math.min(1, Math.max(0, (player.recallTime || 0) / .8)) * 100)}%`;
     const nextRelay = run.relays.find(relay => !relay.active);
     const tip = document.getElementById('context-tip');
+    const requiredArmor = nextRelay ? relayJumpRequirement(nextRelay, player) : null;
     tip.textContent = run.time < 6 && player.x < 9 ? 'A/D 이동 · Space 점프 · K 장갑 발사 · J 펀치'
-      : nextRelay && Math.abs(nextRelay.x - player.x) < 6 ? (armor >= 3 ? 'K로 장갑을 벗어 높이 뛰세요. 공중에서 J로 릴레이를 켭니다.' : 'Space로 높이 도약한 뒤 J로 릴레이를 켜세요.')
+      : nextRelay && Math.abs(nextRelay.x - player.x) < 6 && !player.grounded ? '공중에서는 J로 릴레이를 맞추세요.'
+      : nextRelay && Math.abs(nextRelay.x - player.x) < 6 && requiredArmor !== null ? (armor > requiredArmor ? `현재 장갑 ${armor}장 · 점프 높이에는 장갑 ${requiredArmor}장 이하가 필요합니다. K로 한 장씩 벗긴 뒤 Space 점프 · J 릴레이` : `현재 장갑 ${armor}장 · 점프 높이 충족. Space 점프 · 공중에서 J로 다음 릴레이 켜기`)
+      : nextRelay && Math.abs(nextRelay.x - player.x) < 6 ? '이 릴레이는 현재 위치에서 직선 점프 범위를 벗어났습니다. 아래 발판을 먼저 찾으세요.'
       : armor < 3 ? '지상에서 R을 길게 눌러 장갑을 회수하세요.'
       : boss?.alive && bossDistance <= 15 ? '낮은 파동은 점프 · 높은 광선은 지상에서 · 방패가 열리면 K'
       : 'A/D 이동 · Space 점프 · Shift 대시 · J 펀치 · K 발사 · R 회수';
